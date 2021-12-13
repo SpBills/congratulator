@@ -4,8 +4,8 @@
   </div>
 </template>
 
-<script>
-import TimelineItem from '@/components/TimelineItem'
+<script lang="ts">
+import TimelineItem from '@/components/TimelineItem.vue';
 export default {
     components: {
         TimelineItem

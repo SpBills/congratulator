@@ -47,8 +47,6 @@
 
 <script lang="ts">
 import Timeline from "@/components/Timeline.vue";
-// import Confetti from '@/components/Confetti.vue';
-
 export default {
 	components: {
 		Timeline,
