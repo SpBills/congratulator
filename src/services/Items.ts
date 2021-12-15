@@ -1,16 +1,32 @@
-import { addDoc, collection, getDocs, getFirestore } from "firebase/firestore"; 
+import { getFirestore, doc, updateDoc, arrayUnion, addDoc, collection, getDocs } from "firebase/firestore"; 
 import { Item } from "../models/Item";
 
-const db = getFirestore();
 
-export const getAllItems = async (): Promise<Item[]> => {
-    const docCollection = collection(db, "items");
-    const snapshot = await getDocs(docCollection);
-    const docs: Item[] = snapshot.docs.map(doc => doc.data() as Item);
-    return docs;
+export const addNewItem = async (pageId: string, item: Item): Promise<void> => {
+    const db = getFirestore();
+
+    const collRef = collection(db, "pages", pageId, "items");
+    addDoc(collRef, item);
 }
 
-export const addNewItem = async (item: Item) => {
-    const docCollection = collection(db, "items");
-    addDoc(docCollection, item);
+export const updateItem = async (pageId: string, item: Item): Promise<void> => {
+    const db = getFirestore();
+
+    // TODO: Make this actually update the item.
+    const docRef = doc(db, "pages", pageId, "items", item.id as string);
+    updateDoc(docRef, {...item});
+}
+
+export const getItemsOnPage = async (pageId: string): Promise<Item[]> => {
+    const db = getFirestore();
+
+    const collRef = collection(db, "pages", pageId, "items");
+    const snapshot = await getDocs(collRef);
+    const items = snapshot.docs.map(doc => {
+        return {
+            id: doc.id,
+            ...doc.data()
+        } as Item;   
+    });
+    return items;
 }

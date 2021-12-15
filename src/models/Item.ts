@@ -1,4 +1,6 @@
 export interface Item {
-    header: String,
-    sub: String
+    id?: string,
+    header: string,
+    sub: string,
+    timeline: string
 }

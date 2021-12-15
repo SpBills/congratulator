@@ -4,15 +4,20 @@ import Dashboard from "../views/Dashboard.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard
-  }
+  },
+  {
+    path: '/dashboard/:pageName',
+    name: 'Dashboard',
+    component: Dashboard
+  },
+  {
+    path: '/:pageName',
+    name: 'Home',
+    component: Home
+  },
 ]
 
 const router = createRouter({

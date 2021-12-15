@@ -9,7 +9,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from 'vue-router';
 
 export default {
-    setup(props, ctx) {
+    setup() {
         const router = useRouter();
         const login = async () => {
             const auth = getAuth();

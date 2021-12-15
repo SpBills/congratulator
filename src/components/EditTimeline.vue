@@ -2,51 +2,85 @@
 	<h1>Hello!</h1>
 
     <h1>Basic information</h1>
-    <form>
+    <form class="flex flex-col">
         <input type="text" v-model="basic.name" />
         <input type="text" v-model="basic.primaryColor" />
     </form>
 
     <div id="path">
-        
+        <TimelineItem v-for="(item, index) in items" :text="item" :key="index" :editable="true" @edit="edit" />
     </div>
 
-    <h1>Add a new item</h1>
+    <div id="edit-path">
+        <TimelineItemForm v-if="showEditItemForm" :item="editItem" mode="edit" />
+    </div>
+
+    <button @click="showNewItemForm = !showNewItemForm">Add a new Item</button>
+    <TimelineItemForm v-if="showNewItemForm" :item="newItem" mode="new" />
 	<form @submit:prevent="submit">
 		<button type="submit">Save</button>
 	</form>
 </template>
 
 <script lang="ts">
-import { addNewItem } from '@/services/Items';
-import { BasicInfo } from "../models/BasicInfo";
+import { Page } from "../models/Page";
 import { ref } from '@vue/reactivity';
 import { Item } from '@/models/Item';
+import TimelineItem from './TimelineItem.vue';
+import { getPageInfo, updatePage } from '@/services/Page';
+import { useRoute } from 'vue-router';
+import TimelineItemForm from './TimelineItemForm.vue';
+import { getItemsOnPage } from "@/services/Items";
+
 export default {
-	setup() {
-        const basic = {
+    setup() {
+        const route = useRoute();
+        const basic = ref<Page>({
             name: "",
-            primaryColor: ""
-        } as BasicInfo;
-
-        const items = [
-
-        ]
-
+            primaryColor: "",
+        });
+        const items = ref<Item[]>([]);
+        const showNewItemForm = ref(false);
+        const showEditItemForm = ref(false);
+        const editItem = ref<Item>({
+            header: "",
+            sub: "",
+            timeline: ""
+        });
         const newItem = ref({
             header: "",
             sub: ""
-        } as Item)
-
-		const submit = () => {
-            addNewItem(newItem.value)
+        } as Item);
+        const submit = () => {
+            updatePage(basic.value);
         };
+        const getPage = async () => {
+            let pageInfo = await getPageInfo(route.params.pageName as string);
+            let retrievedItems = await getItemsOnPage(route.params.pageName as string);
 
-		return {
-			submit,
-            basic
-		};
-	},
+            items.value = retrievedItems;
+            basic.value.name = pageInfo.name;
+            basic.value.primaryColor = pageInfo.primaryColor;
+        }
+        getPage();
+
+        const edit = (item: Item) => {
+            showEditItemForm.value = !showEditItemForm.value;
+            editItem.value = item;
+        }
+
+        return {
+            submit,
+            basic,
+            items,
+            showNewItemForm,
+            showEditItemForm,
+            newItem,
+            edit,
+            editItem
+        };
+    },
+    components: { TimelineItem, TimelineItemForm }
 };
 </script>
 
