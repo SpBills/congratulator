@@ -1,25 +1,41 @@
-<template>
-    <h1>Basic information</h1>
-    <form class="flex flex-col">
-        <label>Client Name</label>
-        <input type="text" v-model="basic.name" />
-        <label>Primary Color</label>
-        <input type="text" v-model="basic.primaryColor" />
-    </form>
+<template> 
+    <div class="shadow m-5 p-3 sm:w-100 md:w-1/3">
+        <h2 class="text-lg font-bold mb-3">Basic information</h2>
+        <form class="flex flex-col" @submit:prevent="submit">
+            <label>Client Name</label>
+            <input class="border-b-2" type="text" v-model="basic.name" />
+            <label>Primary Color</label>
+            <input class="border-b-2" type="text" v-model="basic.primaryColor" />
 
-    <div id="path" class="flex">
-        <TimelineItem v-for="(item, index) in items" :text="item" :key="index" :editable="true" @edit="edit" @delete="deleteItem" />
+            <button class="mt-5 bg px-5 py-2 text-white" type="submit">Save</button>
+        </form>
     </div>
 
-    <div id="edit-path">
-        <TimelineItemForm v-if="showEditItemForm" :item="editItem" mode="edit" />
+    <div id="path" class="flex flex-col m-5 p-3">
+        <h2 class="mb-3 font-bold text-lg">Timeline Items</h2>
+        <div class="flex flex-wrap">
+            <TimelineItem
+                class="mt-3"
+                v-for="(item, index) in items"
+                :text="item"
+                :key="index"
+                :editable="true"
+                @edit="edit"
+                @delete="deleteItem"
+                />
+        </div>
+
     </div>
 
-    <button @click="showNewItemForm = !showNewItemForm">Add a new Item</button>
-    <TimelineItemForm v-if="showNewItemForm" :item="newItem" mode="new" />
-	<form @submit:prevent="submit">
-		<button type="submit">Save</button>
-	</form>
+    <div id="edit-path" v-if="showEditItemForm" class="shadow m-5 p-3 sm:w-100 md:w-1/3">
+        <TimelineItemForm :item="editItem" mode="edit" @new-item="showEditItemForm = !showEditItemForm" />
+    </div>
+
+    <div class="shadow m-5 p-3 sm:w-100 md:w-1/3">
+        <button class="bg rounded mb-3 text-white px-5 py-2" @click="showNewItemForm = !showNewItemForm">Add a new Item</button>
+        <TimelineItemForm v-if="showNewItemForm" :item="newItem" mode="new" @new-item="displayNewItem" />
+    </div>
+
 </template>
 
 <script lang="ts">
@@ -75,6 +91,12 @@ export default {
             });
         }
 
+        const displayNewItem = (item: Item) => {
+            items.value.push(item);
+            showNewItemForm.value = !showNewItemForm.value;
+            newItem.value = {} as Item;
+        }
+
         return {
             submit,
             basic,
@@ -82,6 +104,7 @@ export default {
             showNewItemForm,
             showEditItemForm,
             newItem,
+            displayNewItem,
             edit,
             editItem,
             deleteItem

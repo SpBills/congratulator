@@ -18,29 +18,17 @@
 					text-white
 					font-semibold
 				"
+				@click="goToTrack()"
 			>
 				See what is next.
 			</button>
 		</div>
 
-		<div class="bg-black px-5 py-10">
+		<div class="bg-black px-5 py-10" id="track">
 			<h2 class="text-3xl text-white font-bold mb-10">
 				Your personalized track.
 			</h2>
 			<timeline :items="items" />
-		</div>
-		<div class="px-5 py-10 flex flex-col">
-			<h2 class="text-3xl font-bold mb-10">Where are we right now?</h2>
-			<div class="rounded text-white bg p-10 self-center w-64">
-				<p class="font-bold">
-					You've just accepted the contract. Now it's time to hammer
-					out the details.
-				</p>
-
-				<small class="text-sm"
-					>Schedule a call with me through text or email.</small
-				>
-			</div>
 		</div>
 	</main>
 </template>
@@ -76,8 +64,13 @@ export default {
 		};
 		getPage();
 
+		const goToTrack = async () => {
+			window.location.href = '#track';
+		}
+
 		return {
 			pageInfo,
+			goToTrack,
 			items
 		}
 	}

@@ -47,6 +47,8 @@ export default {
             } else {
                 updateItem(route.params.pageName as string, editItem.value);
             }
+
+            ctx.emit("newItem", editItem.value);
         };
 
         return {
@@ -54,5 +56,6 @@ export default {
             editItem
         };
     },
+    emits: ['newItem']
 };
 </script>

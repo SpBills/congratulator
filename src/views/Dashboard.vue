@@ -1,6 +1,8 @@
 <template>
-	<edit-timeline v-if="loggedIn" />
-	<login v-else />
+	<div class="flex flex-col">
+		<edit-timeline  v-if="loggedIn" />
+		<login v-else />
+	</div>
 </template>
 
 <script lang="ts">
