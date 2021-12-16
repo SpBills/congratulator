@@ -1,4 +1,4 @@
-import { getFirestore, doc, updateDoc, arrayUnion, addDoc, collection, getDocs } from "firebase/firestore"; 
+import { getFirestore, doc, updateDoc, addDoc, collection, getDocs, deleteDoc } from "firebase/firestore"; 
 import { Item } from "../models/Item";
 
 
@@ -29,4 +29,11 @@ export const getItemsOnPage = async (pageId: string): Promise<Item[]> => {
         } as Item;   
     });
     return items;
+}
+
+export const deleteItemOnPage = async (pageId: string, itemId: string): Promise<void> => {
+    const db = getFirestore();
+
+    const docRef = doc(db, "pages", pageId, "items", itemId);
+    return deleteDoc(docRef);
 }

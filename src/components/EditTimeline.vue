@@ -3,12 +3,14 @@
 
     <h1>Basic information</h1>
     <form class="flex flex-col">
+        <label>Client Name</label>
         <input type="text" v-model="basic.name" />
+        <label>Primary Color</label>
         <input type="text" v-model="basic.primaryColor" />
     </form>
 
-    <div id="path">
-        <TimelineItem v-for="(item, index) in items" :text="item" :key="index" :editable="true" @edit="edit" />
+    <div id="path" class="flex">
+        <TimelineItem v-for="(item, index) in items" :text="item" :key="index" :editable="true" @edit="edit" @delete="deleteItem" />
     </div>
 
     <div id="edit-path">
@@ -30,7 +32,7 @@ import TimelineItem from './TimelineItem.vue';
 import { getPageInfo, updatePage } from '@/services/Page';
 import { useRoute } from 'vue-router';
 import TimelineItemForm from './TimelineItemForm.vue';
-import { getItemsOnPage } from "@/services/Items";
+import { deleteItemOnPage, getItemsOnPage } from "@/services/Items";
 
 export default {
     setup() {
@@ -69,6 +71,12 @@ export default {
             editItem.value = item;
         }
 
+        const deleteItem = (item: Item) => {
+            deleteItemOnPage(route.params.pageName as string, item.id as string).then(() => {
+                items.value = items.value.filter(i => i.id !== item.id);
+            });
+        }
+
         return {
             submit,
             basic,
@@ -77,7 +85,8 @@ export default {
             showEditItemForm,
             newItem,
             edit,
-            editItem
+            editItem,
+            deleteItem
         };
     },
     components: { TimelineItem, TimelineItemForm }
