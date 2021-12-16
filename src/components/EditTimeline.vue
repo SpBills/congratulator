@@ -1,6 +1,4 @@
 <template>
-	<h1>Hello!</h1>
-
     <h1>Basic information</h1>
     <form class="flex flex-col">
         <label>Client Name</label>
