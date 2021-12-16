@@ -2,7 +2,7 @@
 	<main class="">
 		<div class="flex flex-col height justify-center px-5">
 			<h1 class="text-5xl font-bold mb-10">
-				Congratulations, Masonic Lodge!
+				Congratulations, {{pageInfo.name}}!
 			</h1>
 			<p class="text-2xl mb-10">
 				You've just finished the biggest (and hardest) step in the
@@ -27,7 +27,7 @@
 			<h2 class="text-3xl text-white font-bold mb-10">
 				Your personalized track.
 			</h2>
-			<timeline />
+			<timeline :items="items" />
 		</div>
 		<div class="px-5 py-10 flex flex-col">
 			<h2 class="text-3xl font-bold mb-10">Where are we right now?</h2>
@@ -47,10 +47,40 @@
 
 <script lang="ts">
 import Timeline from "@/components/Timeline.vue";
+import { Item } from "@/models/Item";
+import { Page } from "@/models/Page";
+import { getItemsOnPage } from "@/services/Items";
+import { getPageInfo } from "@/services/Page";
+import { ref } from "vue";
+import { useRoute } from "vue-router";
 export default {
 	components: {
 		Timeline,
 	},
+	setup() {
+		const route = useRoute();
+		const pageInfo = ref({} as Page);
+		const items = ref([] as Item[]);
+
+		const getItems = async () => {
+			let retrievedItems = await getItemsOnPage(route.params.pageName as string);
+			items.value = retrievedItems;
+		};
+
+		getItems();
+
+		const getPage = async () => {
+			let res = await getPageInfo(route.params.pageName as string)
+
+			pageInfo.value = res;
+		};
+		getPage();
+
+		return {
+			pageInfo,
+			items
+		}
+	}
 };
 </script>
 
