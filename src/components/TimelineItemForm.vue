@@ -6,7 +6,7 @@
         <input class="border-b-2" type="text" v-model="editItem.sub" />
         <label>Timeline</label>
         <input class="border-b-2" type="text" v-model="editItem.timeline" >
-        <button type="submit">Save</button>
+        <button class="mt-5 bg px-5 py-2 text-white" type="submit">Save</button>
     </form>
 </template>
 

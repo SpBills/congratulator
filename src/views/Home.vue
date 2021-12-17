@@ -79,7 +79,8 @@ export default {
 
 <style>
 h1 {
-	font-family: raleway;
+	font-family: poppins;
+	font-weight: 700;
 }
 
 .height {
